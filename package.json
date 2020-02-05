@@ -1,8 +1,11 @@
 {
-  "name": "react-form-awesome",
+  "name": "form-awesome-antd",
   "version": "0.1.0",
-  "private": true,
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Noviato/react-form-awesome"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
