@@ -18,7 +18,7 @@ export declare type fieldChangeType = {
     value: any
 }
 
-interface FormBodyProps extends FormComponentProps {
+export interface FormBodyProps extends FormComponentProps {
     inputFields: inputFieldsType,
     onSubmit: (data: Object) => void,
     formName: string,
