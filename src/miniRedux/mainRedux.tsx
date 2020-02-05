@@ -1,4 +1,4 @@
-let state : object = {
+export let state : object = {
     name: 'Nguyen Hai Long',
     userName: 'anonyhostvn'
 };

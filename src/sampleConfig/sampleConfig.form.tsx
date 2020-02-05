@@ -1,12 +1,11 @@
-import React from "react";
-import {Input, Select} from "antd";
+import {Input} from "antd";
 import { inputFieldsType} from "../formEngine";
 
 export const inputFields : inputFieldsType = [
     {
         size: 12,
         key: 'name',
-        element: <Input/>,
+        Element: Input,
         propsElement: {},
         fieldDecorator: {
             rules: [
@@ -20,26 +19,9 @@ export const inputFields : inputFieldsType = [
     {
         size: 12,
         key: 'userName',
-        element: <Input/>,
+        Element: Input,
         propsElement: {},
         fieldDecorator: {}
-    },
-    {
-        size: 12,
-        key: 'type',
-        element:
-            (<Select>
-                <Select.Option key={'stock'}>
-                    stock
-                </Select.Option>
-                <Select.Option key={'bonds'}>
-                    bonds
-                </Select.Option>
-            </Select>),
-        propsElement: {},
-        fieldDecorator: {
-            initialValue: 'stock'
-        }
     }
 ];
 

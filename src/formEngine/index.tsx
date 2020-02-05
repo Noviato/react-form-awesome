@@ -1,68 +1,67 @@
-import React from 'react';
+import React, {forwardRef, useImperativeHandle} from 'react';
 import {Button, Col, Form, Row} from 'antd';
 import {FormComponentProps} from "antd/lib/form";
 import {GetFieldDecoratorOptions, WrappedFormUtils} from "antd/es/form/Form";
 
-interface FormBodyProps extends FormComponentProps {
-    inputFields: inputFieldsType,
-    onSubmit: (data: Object) => void
-}
-
-const FormBody = ({form: {getFieldDecorator, validateFieldsAndScroll}, inputFields, onSubmit} : FormBodyPropsType) => {
-    const handleSubmit = () => {
-        validateFieldsAndScroll((err: any, values: any) => {
-            if (!err) onSubmit(values);
-        });
-    };
-
-    return (
-        <Form>
-            <Row gutter={24}>
-            {
-                inputFields.map(({size, key, element, propsElement, fieldDecorator}) => (
-                    <Col span={size} key={key}>
-                        <Form.Item>
-                            {
-                                getFieldDecorator(
-                                    key,
-                                    fieldDecorator
-                                )(
-                                    element
-                                    )
-                            }
-                        </Form.Item>
-                    </Col>
-                ))
-            }
-            </Row>
-            <Form.Item>
-                <Button onClick={handleSubmit}> Submit </Button>
-            </Form.Item>
-        </Form>
-    );
-};
-
-type FormBodyPropsType  = {
-    form: WrappedFormUtils
-} & FormBodyProps;
-
 type inputConfig = {
     size: number,
     key: string,
-    element: Object,
+    Element: any,
     propsElement: Object,
     fieldDecorator: GetFieldDecoratorOptions
 };
 
 export declare type inputFieldsType = Array<inputConfig>;
 
-export declare type FormConfigType = {
-    formName: string,
+export declare type fieldChangeType = {
+    key: string,
+    value: any
+}
+
+interface FormBodyProps extends FormComponentProps {
     inputFields: inputFieldsType,
+    onSubmit: (data: Object) => void,
+    formName: string,
     dataSource: Object,
-    onFieldChangeFunc: (listFieldChanged: Array<object>) => void,
-    onSubmit: (data: Object) => void
-};
+    onFieldChangeFunc: (listFieldChanged: Array<fieldChangeType>) => void,
+}
+
+const FormBody = forwardRef<FormComponentProps, FormBodyProps>(
+    ({form: {getFieldDecorator, validateFieldsAndScroll}, inputFields, onSubmit, form} : FormBodyProps & {form : WrappedFormUtils}, ref) => {
+        useImperativeHandle(ref, () => ({form}));
+
+        const handleSubmit = () => {
+            validateFieldsAndScroll((err: any, values: any) => {
+                if (!err) onSubmit(values);
+            });
+        };
+
+        return (
+            <Form>
+                <Row gutter={24}>
+                {
+                    inputFields.map(({size, key, Element, propsElement: {...propsElement}, fieldDecorator}) => (
+                        <Col span={size} key={key}>
+                            <Form.Item>
+                                {
+                                    getFieldDecorator(
+                                        key,
+                                        fieldDecorator
+                                    )(
+                                        <Element {...propsElement}/>
+                                        )
+                                }
+                            </Form.Item>
+                        </Col>
+                    ))
+                }
+                </Row>
+                <Form.Item>
+                    <Button onClick={handleSubmit}> Submit </Button>
+                </Form.Item>
+            </Form>
+        );
+});
 
 const transformDataSourceToMapPropsToFields = (dataSource : Object) => {
     let res = {};
@@ -76,15 +75,14 @@ const transformDataSourceToMapPropsToFields = (dataSource : Object) => {
     return res;
 };
 
-const FormEngine = ({formName, inputFields, dataSource, onFieldChangeFunc, onSubmit} : FormConfigType) => {
-    const FormEngine = Form.create<FormBodyProps>({
-        name: `${formName}-ant`,
-        mapPropsToFields: (props) => {
+export const FormEngine = Form.create<FormBodyProps>({
+        name: `awesome-form`,
+        mapPropsToFields: ({dataSource}) => {
             return {
                 ...transformDataSourceToMapPropsToFields(dataSource)
             };
         },
-        onFieldsChange: (props, fields, allFields) => {
+        onFieldsChange: ({onFieldChangeFunc}, fields) => {
             onFieldChangeFunc(Object.entries(fields).map(
                 ([key,value] : [string,any]) : any => {
                     return {
@@ -94,10 +92,4 @@ const FormEngine = ({formName, inputFields, dataSource, onFieldChangeFunc, onSub
                 }
             ));
         }
-    })(
-        FormBody
-    );
-    return <FormEngine inputFields={inputFields} onSubmit={onSubmit}/>;
-};
-
-export default FormEngine;
+})(FormBody);
