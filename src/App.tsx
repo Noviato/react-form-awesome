@@ -12,33 +12,32 @@ const App: React.FC = () => {
         name: 'Nguyen Hai Long',
         userName: 'anonyhostvn'
     });
-    console.log(info);
 
     return (
-            <div>
-                <FormEngine
-                    formName={formName}
-                    inputFields={inputFields}
-                    dataSource={info}
-                    onFieldChangeFunc={(listFieldChanged) =>
-                        listFieldChanged.forEach((temp) => {
-                            setInfo({
-                                ...info,
-                                [temp.key]: temp.value
-                            });
+        <div>
+            <FormEngine
+                formName={formName}
+                inputFields={inputFields}
+                dataSource={info}
+                onFieldChangeFunc={(listFieldChanged) =>
+                    listFieldChanged.forEach((temp) => {
+                        setInfo({
+                            ...info,
+                            [temp.key]: temp.value
+                        });
                     })}
-                    onSubmit={(data: Object) => console.error(data)}
-                    wrappedComponentRef={formRef}
-                />
+                onSubmit={(data: Object) => console.error(data)}
+                wrappedComponentRef={formRef}
+            />
 
-                <Button onClick={() => console.log(formRef)}> Click </Button>
-                <Button onClick={() => {
-                    setInfo({
-                        ...info,
-                        name: 'Nguyen hai An'
-                    });
-                }}> Click to change name </Button>
-            </div>
+            <Button onClick={() => console.log(formRef)}> Click </Button>
+            <Button onClick={() => {
+                setInfo({
+                    ...info,
+                    name: 'Nguyen hai An'
+                });
+            }}> Click to change name </Button>
+        </div>
     );
 };
 

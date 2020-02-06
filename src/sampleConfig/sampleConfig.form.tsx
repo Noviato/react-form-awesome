@@ -1,7 +1,7 @@
 import {Input} from "antd";
-import { inputFieldsType} from "../formEngine";
+import {inputFieldsType} from "../formEngine";
 
-export const inputFields : inputFieldsType = [
+export const inputFields: inputFieldsType = [
     {
         size: 12,
         key: 'name',

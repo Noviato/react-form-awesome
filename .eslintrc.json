@@ -5,9 +5,7 @@
         "node": true
     },
     "extends": [
-        "plugin:react/recommended",
-        "airbnb",
-        "google"
+        "plugin:react/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -27,6 +25,8 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }]
+        "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
+        "linebreak-style":  0,
+        "indent": ["error", 4]
     }
 }

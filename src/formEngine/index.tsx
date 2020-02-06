@@ -1,7 +1,11 @@
 import React, {forwardRef, useImperativeHandle} from 'react';
-import {Button, Col, Form, Row} from 'antd';
-import {FormComponentProps} from "antd/lib/form";
-import {GetFieldDecoratorOptions, WrappedFormUtils} from "antd/es/form/Form";
+import {
+    Button, Col, Form, Row,
+} from 'antd';
+import {
+    FormComponentProps,
+} from 'antd/lib/form';
+import {GetFieldDecoratorOptions, WrappedFormUtils} from 'antd/es/form/Form';
 
 type inputConfig = {
     size: number,
@@ -26,8 +30,16 @@ export interface FormBodyProps extends FormComponentProps {
     onFieldChangeFunc: (listFieldChanged: Array<fieldChangeType>) => void,
 }
 
-const FormBody = forwardRef<FormComponentProps, FormBodyProps>(
-    ({form: {getFieldDecorator, validateFieldsAndScroll}, inputFields, onSubmit, form} : FormBodyProps & {form : WrappedFormUtils}, ref) => {
+// eslint-disable-next-line react/display-name
+const FormBody = forwardRef<FormComponentProps, FormBodyProps> (
+    (
+        {
+            form: {getFieldDecorator, validateFieldsAndScroll},
+            inputFields,
+            onSubmit,
+            form,
+        }: FormBodyProps & { form: WrappedFormUtils }, ref,
+    ) => {
         useImperativeHandle(ref, () => ({form}));
 
         const handleSubmit = () => {
@@ -39,57 +51,55 @@ const FormBody = forwardRef<FormComponentProps, FormBodyProps>(
         return (
             <Form>
                 <Row gutter={24}>
-                {
-                    inputFields.map(({size, key, Element, propsElement: {...propsElement}, fieldDecorator}) => (
-                        <Col span={size} key={key}>
-                            <Form.Item>
-                                {
-                                    getFieldDecorator(
-                                        key,
-                                        fieldDecorator
-                                    )(
-                                        <Element {...propsElement}/>
+                    {
+                        inputFields.map(({size, key, Element, propsElement: {...propsElement}, fieldDecorator,}) => (
+                            <Col span={size} key={key}>
+                                <Form.Item>
+                                    {
+                                        getFieldDecorator(
+                                            key,
+                                            fieldDecorator,
+                                        )(
+                                            <Element {...propsElement} />,
                                         )
-                                }
-                            </Form.Item>
-                        </Col>
-                    ))
-                }
+                                    }
+                                </Form.Item>
+                            </Col>
+                        ))
+                    }
                 </Row>
                 <Form.Item>
                     <Button onClick={handleSubmit}> Submit </Button>
                 </Form.Item>
             </Form>
         );
-});
+    },
+);
 
-const transformDataSourceToMapPropsToFields = (dataSource : Object) => {
+const transformDataSourceToMapPropsToFields = (dataSource: Object) => {
     let res = {};
     Object.entries(dataSource).forEach(
-        ([key, value] : [string, any]) => {
+        ([key, value]: [string, any]) => {
             res = {
                 ...res,
-                [key] : Form.createFormField({value})
-            }
-        });
+                [key]: Form.createFormField({value}),
+            };
+        },
+    );
     return res;
 };
 
 export const FormEngine = Form.create<FormBodyProps>({
-        name: `awesome-form`,
-        mapPropsToFields: ({dataSource}) => {
-            return {
-                ...transformDataSourceToMapPropsToFields(dataSource)
-            };
-        },
-        onFieldsChange: ({onFieldChangeFunc}, fields) => {
-            onFieldChangeFunc(Object.entries(fields).map(
-                ([key,value] : [string,any]) : any => {
-                    return {
-                        key: value.name,
-                        value: value.value
-                    }
-                }
-            ));
-        }
+    name: `awesome-form`,
+    mapPropsToFields: ({dataSource}) => ({
+        ...transformDataSourceToMapPropsToFields(dataSource),
+    }),
+    onFieldsChange: ({onFieldChangeFunc}, fields) => {
+        onFieldChangeFunc(Object.entries(fields).map(
+            ([key, value]: [string, any]): any => ({
+                key: value.name,
+                value: value.value,
+            }),
+        ));
+    },
 })(FormBody);
